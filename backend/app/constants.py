@@ -8,7 +8,7 @@ LEADERBOARD_COLLECTION = 'leaderboard'
 MATCHQUEUE_COLLECTION = 'matchQueue'
 
 # Debate formats
-DEBATE_FORMATS = ['LD', 'PF', 'Policy', 'Congress']
+DEBATE_FORMATS = ['LD', 'PF'] #more coming soon ;)
 
 # Room status values
 ROOM_STATUS_ACTIVE = 'active'
