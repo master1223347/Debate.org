@@ -7,5 +7,3 @@ def calculate_elo(winner_rating, loser_rating, k=32):
     loser_new = loser_rating + k * (0 - (1 - expected_win))
     return round(winner_new), round(loser_new)
 
-# Example usage:
-# winner, loser = calculate_elo(1500, 1400)
