@@ -62,60 +62,33 @@ export default function Learn() {
   };
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Learn & Train</h1>
-        {!selectedMode ? (
-          <button className="btn" onClick={() => navigate('/')}>Home</button>
-        ) : (
-          <button className="btn bg-red-500 hover:bg-red-600" onClick={() => {
-            selectedPrompt ? setSelectedPrompt(null) : setSelectedMode(null);
-          }}>
-            Back
-          </button>
-        )}
-      </div>
-
-      {!selectedMode ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 p-8">
+      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
+        <h1 className="text-4xl font-extrabold text-blue-700 mb-8">Learn & Practice</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {practiceModes.map(mode => (
             <button
               key={mode}
-              className="btn text-left bg-white shadow-md p-6 rounded h-40 w-full flex items-center justify-center text-xl font-semibold"
+              className={`bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold py-4 px-6 rounded-xl shadow transition border border-blue-200 ${selectedMode === mode ? 'ring-2 ring-blue-400' : ''}`}
               onClick={() => setSelectedMode(mode)}
             >
               {mode}
             </button>
           ))}
         </div>
-      ) : !selectedPrompt ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-          {promptOptions[selectedMode].map((prompt, idx) => (
-            <button
-              key={idx}
-              className="btn text-left bg-white shadow-md p-4 rounded h-40 w-full"
-              onClick={() => setSelectedPrompt(prompt)}
-            >
-              {prompt}
-            </button>
-          ))}
-        </div>
-      ) : (
-        <div className="bg-white p-6 rounded-lg shadow-md max-w-3xl mx-auto">
-          <h2 className="text-xl font-semibold mb-4">{selectedMode}</h2>
-          <p className="mb-4">{selectedPrompt}</p>
-          <textarea
-            className="w-full border rounded p-2 mb-4"
-            rows="5"
-            placeholder="Type your response here..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <div className="flex gap-2">
-            <button className="btn" onClick={handleSubmit}>Submit</button>
+        {selectedMode && (
+          <div className="mt-6">
+            <h2 className="text-2xl font-bold text-blue-600 mb-4">{selectedMode} Prompts</h2>
+            <ul className="space-y-4">
+              {promptOptions[selectedMode].map((prompt, idx) => (
+                <li key={idx} className="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow hover:shadow-md transition">
+                  <span className="text-gray-700">{prompt}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

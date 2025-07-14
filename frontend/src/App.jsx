@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Dashboard from './components/Dashboard';
-import Learn from './components/Learn';
-import PlayerVsAI from './components/PlayerVsAI';
-import PlayerVsPlayer from './components/PlayerVsPlayer';
-import Messages from './components/Messages';
-import Spectate from './components/Spectate';
-import Profile from './components/Profile';
+import Dashboard from './app/Dashboard';
+import Learn from './app/Learn';
+import PlayerVsAI from './app/PlayerVsAI';
+import PlayerVsPlayer from './app/PlayerVsPlayer';
+import Messages from './app/Messages';
+import Spectate from './app/Spectate';
+import Profile from './app/Profile';
 
 export default function App() {
   const [pvpMatches, setPvpMatches] = useState([]);
