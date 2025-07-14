@@ -659,22 +659,20 @@ const MagicBento = ({
 			)}
 
 			<BentoCardGrid gridRef={gridRef}>
-				<div className="card-responsive grid gap-4"
+				<div className="card-responsive grid gap-8"
 					style={{
-						gridTemplateColumns: '1fr 1.2fr 1fr',
-						gridTemplateRows: '1fr 0.7fr 0.7fr',
-						width: '140%',
-						maxWidth: '100vw',
-						height: '100%',
-						position: 'relative',
-						padding: '2vh 0',
+						gridTemplateColumns: 'repeat(3, minmax(220px, 1fr))',
+						gridTemplateRows: 'repeat(3, minmax(180px, 1fr))',
+						width: '100%',
+						maxWidth: '1200px',
+						height: 'auto',
 						margin: '0 auto',
-						left: 0,
-						top: 0,
-						background: 'rgba(20, 10, 40, 0.7)',
-						borderRadius: '0',
+						padding: '3vh 2vw',
+						background: 'rgba(20, 10, 40, 0.85)',
+						borderRadius: '32px',
+						boxShadow: '0 8px 32px rgba(132,0,255,0.08)',
 						boxSizing: 'border-box',
-						overflow: 'hidden',
+						overflow: 'visible',
 					}}
 				>
 					{cardData.map((card, index) => {
