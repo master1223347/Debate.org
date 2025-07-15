@@ -11,7 +11,7 @@ export default function PlayerVsPlayer({ onMatchCreate }) {
     event: 'Public Forum',
     time: '3 min',
     style: 'Traditional',
-    difficulty: 'Intermediate'
+    difficulty: 'Intermediate',
   });
 
   const handleChange = (field, value) => {
@@ -22,62 +22,63 @@ export default function PlayerVsPlayer({ onMatchCreate }) {
     const match = {
       ...formData,
       id: Date.now(),
-      status: 'waiting'
+      status: 'waiting',
     };
     if (onMatchCreate) onMatchCreate(match);
     navigate('/');
   };
 
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-br from-blue-100 to-blue-300 flex items-center justify-center">
-      <div className="max-w-2xl w-full mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-200">
-        <h1 className="text-3xl font-extrabold mb-6 text-blue-700">Create PVP Match</h1>
+    <div className="min-h-screen bg-black p-8 flex items-center justify-center text-white">
+      <div className="max-w-2xl w-full bg-[#0b0118] p-8 rounded-2xl shadow-xl border border-purple-800">
+        <button
+          onClick={() => navigate('/')}
+          className="mb-6 text-sm text-purple-400 hover:text-purple-200 transition"
+        >
+          ← Back to Dashboard
+        </button>
+        <h1 className="text-3xl font-extrabold text-purple-300 mb-6">Create PVP Match</h1>
         <div className="space-y-6">
-          <input className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Name" value={formData.name} onChange={e => handleChange('name', e.target.value)} />
-          <input className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="School" value={formData.school} onChange={e => handleChange('school', e.target.value)} />
-          <input className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Grade" value={formData.grade} onChange={e => handleChange('grade', e.target.value)} />
+          {[
+            { label: 'Name', field: 'name', type: 'text' },
+            { label: 'School', field: 'school', type: 'text' },
+            { label: 'Grade', field: 'grade', type: 'text' },
+          ].map(({ label, field, type }) => (
+            <input
+              key={field}
+              type={type}
+              placeholder={label}
+              value={formData[field]}
+              onChange={e => handleChange(field, e.target.value)}
+              className="w-full p-3 bg-black text-white border border-purple-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            />
+          ))}
 
-          <div>
-            <label className="font-semibold text-blue-700">Level</label>
-            <select className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-400" value={formData.level} onChange={e => handleChange('level', e.target.value)}>
-              <option>Varsity</option>
-              <option>JV</option>
-              <option>Novice</option>
-            </select>
-          </div>
-          <div>
-            <label className="font-semibold text-blue-700">Debate Event</label>
-            <select className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-400" value={formData.event} onChange={e => handleChange('event', e.target.value)}>
-              <option>Public Forum</option>
-              <option>Lincoln Douglas</option>
-              <option>Congress</option>
-              <option>Policy</option>
-            </select>
-          </div>
-          <div>
-            <label className="font-semibold text-blue-700">Time Control</label>
-            <select className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-400" value={formData.time} onChange={e => handleChange('time', e.target.value)}>
-              <option>3 min</option>
-              <option>5 min</option>
-              <option>10 min</option>
-            </select>
-          </div>
-          <div>
-            <label className="font-semibold text-blue-700">Style</label>
-            <select className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-400" value={formData.style} onChange={e => handleChange('style', e.target.value)}>
-              <option>Traditional</option>
-              <option>Progressive</option>
-            </select>
-          </div>
-          <div>
-            <label className="font-semibold text-blue-700">Difficulty</label>
-            <select className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-400" value={formData.difficulty} onChange={e => handleChange('difficulty', e.target.value)}>
-              <option>Beginner</option>
-              <option>Intermediate</option>
-              <option>Advanced</option>
-            </select>
-          </div>
-          <button className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow hover:bg-blue-700 transition w-full mt-4" onClick={handleSubmit}>Create Match</button>
+          {[
+            { label: 'Level', field: 'level', options: ['Varsity', 'JV', 'Novice'] },
+            { label: 'Debate Event', field: 'event', options: ['Public Forum', 'Lincoln Douglas', 'Congress', 'Policy'] },
+            { label: 'Prep Time', field: 'time', options: ['3 min', '5 min', '10 min'] },
+            { label: 'Style', field: 'style', options: ['Traditional', 'Progressive'] },
+            { label: 'Difficulty', field: 'difficulty', options: ['Beginner', 'Intermediate', 'Advanced'] },
+          ].map(({ label, field, options }) => (
+            <div key={field}>
+              <label className="block mb-1 text-purple-400 font-semibold">{label}</label>
+              <select
+                className="w-full p-3 bg-black text-white border border-purple-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                value={formData[field]}
+                onChange={e => handleChange(field, e.target.value)}
+              >
+                {options.map(opt => <option key={opt}>{opt}</option>)}
+              </select>
+            </div>
+          ))}
+
+          <button
+            className="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg shadow"
+            onClick={handleSubmit}
+          >
+            Create Match
+          </button>
         </div>
       </div>
     </div>

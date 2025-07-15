@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const practiceModes = [
   'Summary Practice',
@@ -7,7 +7,7 @@ const practiceModes = [
   'Fallacy Finder',
   'Refutation Practice',
   'Idea Construction',
-  'Rhetoric Writing'
+  'Rhetoric Writing',
 ];
 
 const promptOptions = {
@@ -47,46 +47,110 @@ const promptOptions = {
     'Explain the value of dissent in a democracy.',
     'Argue for or against the use of emotional appeals in debate.',
     'Compose a rhetorical analysis on the concept of justice.',
-  ]
+  ],
 };
 
 export default function Learn() {
   const navigate = useNavigate();
-  const [selectedMode, setSelectedMode] = useState(null);
-  const [selectedPrompt, setSelectedPrompt] = useState(null);
+  const { mode, promptId } = useParams();
   const [input, setInput] = useState('');
 
+  const readableMode = practiceModes.find(
+    m => m.toLowerCase().replace(/\s+/g, '-') === mode
+  );
+
+  const prompts = readableMode ? promptOptions[readableMode] : [];
+
+  const decodedPrompt = promptId ? decodeURIComponent(promptId) : null;
+
   const handleSubmit = () => {
-    alert(`${selectedMode} submitted:\n` + input);
+    if (!decodedPrompt || !input.trim()) return;
+    alert(`${readableMode}:\nPrompt: ${decodedPrompt}\nResponse:\n${input}`);
     setInput('');
+    navigate(`/learn/${mode}`);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-blue-300 p-8">
-      <div className="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
-        <h1 className="text-4xl font-extrabold text-blue-700 mb-8">Learn & Practice</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-          {practiceModes.map(mode => (
-            <button
-              key={mode}
-              className={`bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold py-4 px-6 rounded-xl shadow transition border border-blue-200 ${selectedMode === mode ? 'ring-2 ring-blue-400' : ''}`}
-              onClick={() => setSelectedMode(mode)}
-            >
-              {mode}
-            </button>
-          ))}
-        </div>
-        {selectedMode && (
-          <div className="mt-6">
-            <h2 className="text-2xl font-bold text-blue-600 mb-4">{selectedMode} Prompts</h2>
-            <ul className="space-y-4">
-              {promptOptions[selectedMode].map((prompt, idx) => (
-                <li key={idx} className="bg-gray-50 p-4 rounded-lg border border-gray-200 shadow hover:shadow-md transition">
-                  <span className="text-gray-700">{prompt}</span>
-                </li>
+    <div className="min-h-screen bg-black text-white p-8 flex items-center justify-center">
+      <div className="max-w-4xl w-full bg-[#0b0118] p-8 rounded-2xl shadow-xl border border-purple-800">
+        {/* 🡨 Back Buttons */}
+        <button
+          onClick={() =>
+            promptId
+              ? navigate(`/learn/${mode}`)
+              : mode
+              ? navigate('/learn')
+              : navigate('/')
+          }
+          className="mb-6 text-sm text-purple-400 hover:text-purple-200 transition"
+        >
+          ← {promptId ? 'Back to Prompts' : mode ? 'Back to Practice Modes' : 'Back to Dashboard'}
+        </button>
+
+        {/* 🎯 Page 1: Practice Mode Selection */}
+        {!mode && (
+          <>
+            <h1 className="text-4xl font-extrabold text-purple-300 mb-8">Learn & Practice</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {practiceModes.map((m) => (
+                <button
+                  key={m}
+                  onClick={() =>
+                    navigate(`/learn/${m.toLowerCase().replace(/\s+/g, '-')}`)
+                  }
+                  className="p-4 rounded-xl border border-purple-700 text-white hover:bg-purple-800 transition font-semibold shadow"
+                >
+                  {m}
+                </button>
               ))}
-            </ul>
-          </div>
+            </div>
+          </>
+        )}
+
+        {/* 📋 Page 2: Prompt Selection */}
+        {mode && readableMode && !promptId && (
+          <>
+            <h2 className="text-2xl font-bold text-purple-300 mb-4">
+              {readableMode} Prompts
+            </h2>
+            <div className="grid grid-cols-1 gap-4 mb-6">
+              {prompts.map((prompt, idx) => (
+                <button
+                  key={idx}
+                  onClick={() =>
+                    navigate(`/learn/${mode}/${encodeURIComponent(prompt)}`)
+                  }
+                  className="text-left p-4 rounded-lg border border-purple-700 text-purple-100 hover:bg-purple-900 transition shadow"
+                >
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* 📝 Page 3: Prompt Response Page */}
+        {promptId && decodedPrompt && (
+          <>
+            <h2 className="text-2xl font-bold text-purple-300 mb-6">
+              {readableMode}
+            </h2>
+            <p className="text-purple-200 mb-4 bg-black p-4 border border-purple-700 rounded-lg shadow">
+              {decodedPrompt}
+            </p>
+            <textarea
+              placeholder="Write your response here..."
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              className="w-full min-h-[120px] p-4 bg-black text-white border border-purple-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 mb-4"
+            />
+            <button
+              onClick={handleSubmit}
+              className="bg-purple-600 hover:bg-purple-700 transition text-white font-semibold px-6 py-3 rounded-lg shadow"
+            >
+              Submit Practice
+            </button>
+          </>
         )}
       </div>
     </div>

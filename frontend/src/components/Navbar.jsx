@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
+import { Link } from 'react-router-dom';
+const MotionLink = motion(Link);
 
 const navItems = [
 	{ label: "Available Matches", emphasize: true },
@@ -13,6 +15,14 @@ const navItems = [
 
 export default function Navbar() {
 	const [menuOpen, setMenuOpen] = useState(false)
+	const routeMap = {
+	"Available Matches": "/lobby",
+	"Player vs AI": "/ai",
+	"Player vs Player": "/pvp",
+	"Messages": "/messages",
+	"Learn": "/learn",
+	"Spectate": "/spectate",
+	};
 
 	return (
 		<>
@@ -35,27 +45,27 @@ export default function Navbar() {
 					<div className="hidden md:flex items-center gap-10">
 						{navItems.map((item, i) =>
 							item.emphasize ? (
-								<motion.a
-									key={i}
-									href={"#" + item.label.toLowerCase().replace(/\s/g, "-")}
-									className="h-12 px-4 flex items-center justify-center bg-gradient-to-b from-cyan-500 to-blue-700 rounded-xl text-sm font-semibold shadow-md hover:scale-105 transition-transform duration-300"
-								>
-									{item.label}
-								</motion.a>
+							<MotionLink
+								key={i}
+								to={routeMap[item.label]}
+								className="h-12 px-4 flex items-center justify-center bg-gradient-to-b from-cyan-500 to-blue-700 rounded-xl text-sm font-semibold shadow-md hover:scale-105 transition-transform duration-300"
+							>
+								{item.label}
+							</MotionLink>
 							) : (
-								<motion.a
-									key={i}
-									href={"#" + item.label.toLowerCase().replace(/\s/g, "-")}
-									className="relative group text-sm"
-									whileHover={{ scale: 1.05 }}
-									transition={{ duration: 0.2 }}
-								>
-									{item.label}
-									<span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
-								</motion.a>
+							<MotionLink
+								key={i}
+								to={routeMap[item.label]}
+								className="relative group text-sm"
+								whileHover={{ scale: 1.05 }}
+								transition={{ duration: 0.2 }}
+							>
+								{item.label}
+								<span className="absolute left-0 -bottom-1 w-0 h-0.5 bg-cyan-400 group-hover:w-full transition-all duration-300"></span>
+							</MotionLink>
 							)
 						)}
-					</div>
+						</div>
 
 					{/* Mobile Menu Icon */}
 					<div className="md:hidden z-50">
@@ -76,18 +86,16 @@ export default function Navbar() {
 							className="fixed top-0 right-0 h-screen w-3/4 bg-gray-900 p-6 flex flex-col gap-6 text-white shadow-xl"
 						>
 							{navItems.map((item, i) => (
-								<motion.a
+								<MotionLink
 									key={i}
-									href={"#" + item.label.toLowerCase().replace(/\s/g, "-")}
-									className={`text-xl ${
-										item.emphasize ? "font-bold text-cyan-300" : ""
-									}`}
+									to={routeMap[item.label]}
+  									className={`text-xl ${item.emphasize ? "font-bold text-cyan-300" : ""}`}
 									onClick={() => setMenuOpen(false)}
 									whileHover={{ scale: 1.05, color: "#22d3ee" }}
 									transition={{ duration: 0.2 }}
 								>
 									{item.label}
-								</motion.a>
+								</MotionLink>
 							))}
 						</motion.div>
 					)}

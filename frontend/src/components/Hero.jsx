@@ -2,9 +2,10 @@ import React from "react";
 import Navbar from "./Navbar";
 import { FaFacebookF, FaLinkedinIn } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa6";
-
+import { useNavigate } from 'react-router-dom';
 const Hero = () => {
   const [sidebar, setSidebar] = React.useState(false);
+  const navigate = useNavigate();
   return (
     <main className="md:px-12 md:py-6 bg-primaryDark">
       <section className="relative min-h-[650px] bg-gradient-to-r from-primary to-secondary w-full md:rounded-xl shadow-md">
@@ -12,7 +13,7 @@ const Hero = () => {
           <Navbar sidebar={sidebar} setSidebar={setSidebar} />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center min-h-[665px]">
             {/* text-content-section */}
-            <div className="text-white mt-[100px] md:mt-0 p-4 space-y-4">
+            <div className="text-white mt-[100px] md:mt-0 p-4 space-y-4 z-10 relative">
               <h1
                 data-aos="fade-right"
                 data-aos-delay="300"
@@ -33,9 +34,10 @@ const Hero = () => {
                 arena of ideas.
               </p>
               <button
+                onClick={() => navigate('/lobby')}
                 data-aos="fade-up"
                 data-aos-delay="500"
-                className="border border-white px-4 py-2 rounded-lg"
+                className="border border-white px-4 py-2 rounded-lg hover:bg-white hover:text-black transition"
               >
                 Start Debating
               </button>

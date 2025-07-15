@@ -15,58 +15,98 @@ export default function Messages() {
   const [selectedId, setSelectedId] = useState(1);
   const [newMessage, setNewMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [conversations, setConversations] = useState(dummyConversations);
 
-  const filteredConversations = dummyConversations.filter(conv =>
+  const filteredConversations = conversations.filter(conv =>
     conv.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const selectedConv = dummyConversations.find(conv => conv.id === selectedId);
+  const selectedConv = conversations.find(conv => conv.id === selectedId);
+
+  const handleSend = () => {
+    if (newMessage.trim() === '') return;
+
+    setConversations(prev =>
+      prev.map(conv =>
+        conv.id === selectedId
+          ? { ...conv, messages: [...conv.messages, newMessage] }
+          : conv
+      )
+    );
+    setNewMessage('');
+  };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-blue-100 to-blue-300">
-      {/* Conversations List */}
-      <div className="w-72 border-r bg-white flex flex-col rounded-r-3xl shadow-lg">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="m-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <div className="overflow-y-auto flex-1">
-          {filteredConversations.map(conv => (
-            <button
-              key={conv.id}
-              className={`w-full text-left p-5 border-b hover:bg-blue-50 transition ${conv.id === selectedId ? 'bg-blue-100 ring-2 ring-blue-400' : ''}`}
-              onClick={() => setSelectedId(conv.id)}
-            >
-              <div className="font-bold text-blue-700">{conv.name}</div>
-              <div className="text-sm text-gray-600 truncate">{conv.messages[conv.messages.length - 1]}</div>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Message Window */}
-      <div className="flex-1 flex flex-col p-8">
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200 flex flex-col h-full">
-          <h2 className="text-2xl font-bold text-blue-700 mb-4">Messages</h2>
-          <div className="flex-1 overflow-y-auto mb-4">
-            {selectedConv.messages.map((msg, idx) => (
-              <div key={idx} className={`mb-2 flex ${idx % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
-                <span className={`inline-block px-4 py-2 rounded-lg shadow ${idx % 2 === 0 ? 'bg-blue-100 text-blue-700' : 'bg-gray-200 text-gray-700'}`}>{msg}</span>
-              </div>
+    <div className="min-h-screen bg-black p-8 flex items-center justify-center">
+      <div className="max-w-6xl w-full h-[700px] bg-[#060010] rounded-2xl shadow-xl border border-purple-900 flex overflow-hidden">
+        {/* Sidebar */}
+        <div className="w-72 border-r border-purple-900 p-4 bg-[#0b0118] flex flex-col">
+          <button
+            onClick={() => navigate('/')}
+            className="mb-4 text-sm text-purple-400 hover:text-purple-200 transition"
+          >
+            ← Back to Dashboard
+          </button>
+          <input
+            type="text"
+            placeholder="Search..."
+            className="p-3 bg-black text-white border border-purple-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 mb-4"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          
+          {/* 👇 ONLY this part scrolls, so layout height remains fixed */}
+          <div className="space-y-2 overflow-y-auto flex-1 min-h-[200px]">
+            {filteredConversations.map(conv => (
+              <button
+                key={conv.id}
+                onClick={() => setSelectedId(conv.id)}
+                className={`w-full text-left p-3 rounded-lg transition ${
+                  conv.id === selectedId
+                    ? 'bg-purple-900 text-white ring-2 ring-purple-500'
+                    : 'hover:bg-purple-800 text-white'
+                }`}
+              >
+                <div className="font-bold">{conv.name}</div>
+                <div className="text-sm text-purple-300 truncate">
+                  {conv.messages[conv.messages.length - 1]}
+                </div>
+              </button>
             ))}
           </div>
-          <div className="flex gap-2 mt-auto">
-            <input
-              type="text"
-              className="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Type a message..."
-              value={newMessage}
-              onChange={e => setNewMessage(e.target.value)}
-            />
-            <button className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition">Send</button>
+        </div>
+
+        {/* Message Area */}
+        <div className="flex-1 p-8 flex flex-col justify-between bg-[#060010] text-white">
+          <div className="flex flex-col h-full overflow-hidden">
+            <h2 className="text-3xl font-extrabold text-purple-300 mb-4">Messages</h2>
+            <div className="space-y-2 overflow-y-auto mb-4 flex-1">
+              {selectedConv.messages.map((msg, idx) => (
+                <div key={idx} className={`flex ${idx % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
+                  <span className={`inline-block px-4 py-2 rounded-lg shadow ${
+                    idx % 2 === 0 ? 'bg-purple-800 text-white' : 'bg-gray-700 text-white'
+                  }`}>
+                    {msg}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2 mt-4">
+              <input
+                type="text"
+                className="flex-1 p-3 bg-black text-white border border-purple-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                placeholder="Type a message..."
+                value={newMessage}
+                onChange={e => setNewMessage(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleSend()}
+              />
+              <button
+                className="bg-purple-600 text-white font-semibold px-6 py-3 rounded-lg shadow hover:bg-purple-700 transition"
+                onClick={handleSend}
+              >
+                Send
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -11,7 +11,7 @@ export default function PlayerVsAI() {
     time: '3 min',
     style: 'Traditional',
     difficulty: 'Intermediate',
-    side: 'Random'
+    side: 'Random',
   });
 
   const handleSettingChange = (field, value) => {
@@ -21,8 +21,7 @@ export default function PlayerVsAI() {
   const assignSides = () => {
     if (settings.side === 'Random') {
       const sides = ['Affirmative', 'Negative'];
-      const rng = Math.floor(Math.random() * 2);
-      return sides[rng];
+      return sides[Math.floor(Math.random() * 2)];
     }
     return settings.side;
   };
@@ -31,67 +30,66 @@ export default function PlayerVsAI() {
   const aiSide = playerSide === 'Affirmative' ? 'Negative' : 'Affirmative';
 
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-br from-blue-100 to-blue-300 flex items-center justify-center">
+    <div className="min-h-screen bg-black p-8 flex items-center justify-center text-white">
       {!settingsSubmitted ? (
-        <div className="max-w-2xl w-full mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-200">
-          <h1 className="text-3xl font-extrabold mb-6 text-blue-700">Create AI Match</h1>
+        <div className="max-w-2xl w-full bg-[#0b0118] p-8 rounded-2xl shadow-xl border border-purple-800">
+          <button
+            onClick={() => navigate('/')}
+            className="mb-6 text-sm text-purple-400 hover:text-purple-200 transition"
+          >
+            ← Back to Dashboard
+          </button>
+          <h1 className="text-3xl font-extrabold text-purple-300 mb-6">Create AI Match</h1>
           <div className="space-y-6">
-            <div>
-              <label className="font-semibold text-blue-700">Debate Event</label>
-              <select className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-400" value={settings.event} onChange={e => handleSettingChange('event', e.target.value)}>
-                <option>Public Forum</option>
-                <option>Lincoln Douglas</option>
-                <option>Congress</option>
-                <option>Policy</option>
-              </select>
-            </div>
-            <div>
-              <label className="font-semibold text-blue-700">Time Control</label>
-              <select className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-400" value={settings.time} onChange={e => handleSettingChange('time', e.target.value)}>
-                <option>3 min</option>
-                <option>5 min</option>
-                <option>10 min</option>
-              </select>
-            </div>
-            <div>
-              <label className="font-semibold text-blue-700">Style</label>
-              <select className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-400" value={settings.style} onChange={e => handleSettingChange('style', e.target.value)}>
-                <option>Traditional</option>
-                <option>Progressive</option>
-              </select>
-            </div>
-            <div>
-              <label className="font-semibold text-blue-700">Difficulty</label>
-              <select className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-400" value={settings.difficulty} onChange={e => handleSettingChange('difficulty', e.target.value)}>
-                <option>Beginner</option>
-                <option>Intermediate</option>
-                <option>Advanced</option>
-              </select>
-            </div>
-            <div>
-              <label className="font-semibold text-blue-700">Side</label>
-              <select className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-blue-400" value={settings.side} onChange={e => handleSettingChange('side', e.target.value)}>
-                <option>Random</option>
-                <option>Affirmative</option>
-                <option>Negative</option>
-              </select>
-            </div>
-            <button className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow hover:bg-blue-700 transition w-full mt-4" onClick={() => setSettingsSubmitted(true)}>Start Match</button>
+            {[
+              { label: 'Debate Event', field: 'event', options: ['Public Forum', 'Lincoln Douglas', 'Congress', 'Policy'] },
+              { label: 'Prep Time', field: 'time', options: ['3 min', '5 min', '10 min'] },
+              { label: 'Style', field: 'style', options: ['Traditional', 'Progressive'] },
+              { label: 'Difficulty', field: 'difficulty', options: ['Beginner', 'Intermediate', 'Advanced'] },
+              { label: 'Side', field: 'side', options: ['Random', 'Affirmative', 'Negative'] },
+            ].map(({ label, field, options }) => (
+              <div key={field}>
+                <label className="block mb-1 text-purple-400 font-semibold">{label}</label>
+                <select
+                  className="w-full p-3 bg-black text-white border border-purple-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  value={settings[field]}
+                  onChange={e => handleSettingChange(field, e.target.value)}
+                >
+                  {options.map(opt => <option key={opt}>{opt}</option>)}
+                </select>
+              </div>
+            ))}
+            <button
+              className="w-full bg-purple-600 hover:bg-purple-700 transition text-white font-semibold py-3 px-6 rounded-lg shadow"
+              onClick={() => setSettingsSubmitted(true)}
+            >
+              Start Match
+            </button>
           </div>
         </div>
       ) : !matchOver ? (
-        <div className="max-w-2xl w-full mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-200 flex flex-col items-center">
-          <h2 className="text-2xl font-bold text-blue-700 mb-4">Debate Started!</h2>
-          <div className="flex gap-8 mb-6">
-            <div className="bg-blue-100 text-blue-700 px-6 py-3 rounded-lg font-semibold shadow">You: {playerSide}</div>
-            <div className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold shadow">AI: {aiSide}</div>
+        <div className="max-w-2xl w-full bg-[#0b0118] p-8 rounded-2xl shadow-xl border border-purple-800 text-center">
+          <h2 className="text-2xl font-bold text-purple-300 mb-6">Debate Started!</h2>
+          <div className="flex justify-center gap-8 mb-6">
+            <div className="bg-purple-800 px-6 py-3 rounded-lg font-semibold">You: {playerSide}</div>
+            <div className="bg-gray-700 px-6 py-3 rounded-lg font-semibold">AI: {aiSide}</div>
           </div>
-          <button className="bg-green-500 text-white font-semibold py-3 px-6 rounded-lg shadow hover:bg-green-600 transition" onClick={() => setMatchOver(true)}>End Match</button>
+          <button
+            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow"
+            onClick={() => setMatchOver(true)}
+          >
+            End Match
+          </button>
         </div>
       ) : (
-        <div className="max-w-2xl w-full mx-auto bg-white p-8 rounded-2xl shadow-xl border border-gray-200 flex flex-col items-center">
-          <h2 className="text-2xl font-bold text-green-600 mb-4">Match Over!</h2>
-          <button className="bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow hover:bg-blue-700 transition" onClick={() => navigate('/')}>Back to Dashboard</button>
+        <div className="max-w-2xl w-full bg-[#0b0118] p-8 rounded-2xl shadow-xl border border-purple-800 text-center">
+          <h2 className="text-2xl font-bold text-green-400 mb-6">Match Over!</h2>
+          <button
+            className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-6 rounded-lg shadow"
+            onClick={() => navigate('/')}
+          >
+            Back to Dashboard
+          </button>
         </div>
       )}
     </div>

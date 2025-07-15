@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { gsap } from "gsap";
+import { useNavigate } from 'react-router-dom';
 
 const DEFAULT_PARTICLE_COUNT = 12;
 const DEFAULT_SPOTLIGHT_RADIUS = 300;
@@ -7,42 +8,55 @@ const DEFAULT_GLOW_COLOR = "132, 0, 255";
 const MOBILE_BREAKPOINT = 768;
 
 const cardData = [
-	{
-		color: "#060010",
-		title: "Available Matches",
-		description: "See open debates and join instantly.",
-		label: "Available Matches",
-	},
-	{
-		color: "#060010",
-		title: "Player vs AI",
-		description: "Challenge the AI and practice your skills.",
-		label: "Player vs AI",
-	},
-	{
-		color: "#060010",
-		title: "Player vs Player",
-		description: "Compete with other debaters in real time.",
-		label: "Player vs Player",
-	},
-	{
-		color: "#060010",
-		title: "Messages",
-		description: "Chat and connect with other debaters.",
-		label: "Messages",
-	},
-	{
-		color: "#060010",
-		title: "Learn",
-		description: "Access lessons and resources to improve.",
-		label: "Learn",
-	},
-	{
-		color: "#060010",
-		title: "Spectate",
-		description: "Watch live debates and learn from others.",
-		label: "Spectate",
-	},
+  {
+    color: "#060010",
+    title: "💡 Quote of the Day",
+    description: "“The most powerful weapon is the right word at the right moment.”",
+    label: "Inspiration",
+    route: "/learn"
+  },
+  {
+    color: "#060010",
+    title: "🔥 Refutation Practice",
+    description: "Jump into an argument and sharpen your counters.",
+    label: "Practice",
+    route: "/learn/refutation-practice"
+  },
+  {
+    color: "#060010",
+    title: "🤖 Player vs AI",
+    description: "Challenge the AI and practice your skills.",
+    label: "Quick Match",
+    route: "/ai"
+  },
+  {
+    color: "#060010",
+    title: "🏟️ Available Matches",
+    description: "Join ongoing PvP matches from across the community.",
+    label: "Lobby",
+    route: "/lobby"
+  },
+  {
+    color: "#060010",
+    title: "🧠 Fallacy Finder",
+    description: "Spot the flaw in arguments and test your logic.",
+    label: "Practice",
+    route: "/learn/fallacy-finder"
+  },
+  {
+    color: "#060010",
+    title: "💬 Messages",
+    description: "Chat and connect with other debaters.",
+    label: "Inbox",
+    route: "/messages"
+  },
+  {
+    color: "#060010",
+    title: "📊 Your Debate Stats",
+    description: "Track your progress and review past matches.",
+    label: "Stats",
+    route: "/profile"
+  }
 ];
 
 const createParticleElement = (x, y, color = DEFAULT_GLOW_COLOR) => {
@@ -89,6 +103,7 @@ const ParticleCard = ({
 	enableTilt = true,
 	clickEffect = false,
 	enableMagnetism = false,
+	onClick,
 }) => {
 	const cardRef = useRef(null);
 	const particlesRef = useRef([]);
@@ -326,6 +341,7 @@ const ParticleCard = ({
 			ref={cardRef}
 			className={`${className} relative overflow-hidden`}
 			style={{ ...style, position: "relative", overflow: "hidden" }}
+			onClick={onClick} 
 		>
 			{children}
 		</div>
@@ -518,7 +534,7 @@ const MagicBento = ({
 	const gridRef = useRef(null);
 	const isMobile = useMobileDetection();
 	const shouldDisableAnimations = disableAnimations || isMobile;
-
+	const navigate = useNavigate();
 	return (
 		<>
 			<style>
@@ -661,65 +677,22 @@ const MagicBento = ({
 			<BentoCardGrid gridRef={gridRef}>
 				<div className="card-responsive grid gap-8"
 					style={{
-						gridTemplateColumns: 'repeat(3, minmax(220px, 1fr))',
-						gridTemplateRows: 'repeat(3, minmax(180px, 1fr))',
-						width: '100%',
-						maxWidth: '1200px',
-						height: 'auto',
-						margin: '0 auto',
-						padding: '3vh 2vw',
+						gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+						width: '100vw',
+						height: '100vh',
+						margin: 0,
+						padding: '4vh 5vw', // you can tweak this
 						background: 'rgba(20, 10, 40, 0.85)',
-						borderRadius: '32px',
+						borderRadius: '0px',
 						boxShadow: '0 8px 32px rgba(132,0,255,0.08)',
 						boxSizing: 'border-box',
-						overflow: 'visible',
+						overflow: 'hidden',
 					}}
-				>
+					>
+
 					{cardData.map((card, index) => {
 						let customStyle = {};
-						// Custom sizes and positions for each bento box to fill space and look balanced
-						if (index === 0) { // Available Matches
-							customStyle = {
-								gridColumn: '1 / 2',
-								gridRow: '1 / 4',
-								minHeight: '100%',
-							};
-						} else if (index === 1) { // Player vs AI
-							customStyle = {
-								gridColumn: '2 / 3',
-								gridRow: '1 / 2',
-								minHeight: '100%',
-							};
-						} else if (index === 2) { // Player vs Player
-							customStyle = {
-								gridColumn: '2 / 4',
-								gridRow: '2 / 3',
-								minHeight: '100%',
-							};
-						} else if (index === 3) { // Messages
-							customStyle = {
-								gridColumn: '1 / 2',
-								gridRow: '3 / 4',
-								minHeight: '100%',
-							};
-						} else if (index === 4) { // Learn
-							customStyle = {
-								gridColumn: '3 / 4',
-								gridRow: '1 / 2',
-								minHeight: '100%',
-								alignSelf: 'start',
-								justifySelf: 'end',
-								aspectRatio: '1',
-								width: '80%',
-							};
-						} else if (index === 5) { // Spectate
-							customStyle = {
-								gridColumn: '3 / 4',
-								gridRow: '3 / 4',
-								minHeight: '100%',
-							};
-						}
-						const baseClassName = `card flex flex-col justify-between relative aspect-[4/3] min-h-[200px] w-full max-w-full p-5 rounded-[20px] border border-solid font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] ${enableBorderGlow ? "card--border-glow" : ""
+						const baseClassName = `card flex flex-col justify-between aspect-square h-full w-full p-5 rounded-[20px] border border-solid font-light overflow-hidden transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)] ${enableBorderGlow ? "card--border-glow" : ""}
 							}`;
 
 						const cardStyle = {
@@ -744,6 +717,7 @@ const MagicBento = ({
 									enableTilt={enableTilt}
 									clickEffect={clickEffect}
 									enableMagnetism={enableMagnetism}
+									onClick={() => navigate(card.route)}
 								>
 									<div className="card__header flex justify-between gap-3 relative text-white">
 										<span className="card__label text-base">{card.label}</span>
